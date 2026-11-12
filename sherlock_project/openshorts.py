@@ -4,7 +4,7 @@ OpenShorts integration: turn (live) streams into short vertical clips.
 Configuration (environment variables):
     OPENSHORTS_API_URL  Base URL, default https://api.openshorts.app
                         (use e.g. http://localhost:8000 for a self-hosted instance)
-    OPENSHORTS_API_KEY  Bearer key (osk_...). Not needed for self-hosted.
+    OPENSHORTS_API_KEY  API key (osk_...), sent as X-API-Key. Not needed for self-hosted.
 
 Usage:
     python -m sherlock_project.openshorts URL                  # finished video / VOD
@@ -38,7 +38,7 @@ class OpenShortsClient:
         self.timeout = timeout
 
     def _headers(self) -> dict:
-        return {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
+        return {"X-API-Key": self.api_key} if self.api_key else {}
 
     def _request(self, method: str, path: str, **kwargs) -> dict:
         resp = requests.request(
