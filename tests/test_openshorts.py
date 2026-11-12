@@ -16,13 +16,13 @@ def _resp(payload, ok=True, status=200):
     return r
 
 
-def test_process_url_sends_form_and_bearer():
+def test_process_url_sends_form_and_api_key_header():
     client = OpenShortsClient(base_url="http://x", api_key="osk_test")
     with mock.patch("requests.request", return_value=_resp({"job_id": "j1"})) as req:
         assert client.process_url("https://y/v", target_clips=3) == "j1"
     args, kwargs = req.call_args
     assert args == ("POST", "http://x/api/process")
-    assert kwargs["headers"] == {"Authorization": "Bearer osk_test"}
+    assert kwargs["headers"] == {"X-API-Key": "osk_test"}
     assert kwargs["data"] == {"url": "https://y/v", "acknowledged": "true", "target_clips": "3"}
 
 
